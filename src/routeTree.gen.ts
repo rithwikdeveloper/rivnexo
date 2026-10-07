@@ -18,8 +18,13 @@ import { Route as SearchRouteImport } from './routes/search'
 import { Route as AuthenticatedDownloadsRouteImport } from './routes/_authenticated/downloads'
 import { Route as AuthenticatedFavoritesRouteImport } from './routes/_authenticated/favorites'
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
+import { Route as AdminApksRouteImport } from './routes/admin.apks'
+import { Route as AdminWebsitesRouteImport } from './routes/admin.websites'
 import { Route as AdminLoginRouteImport } from './routes/admin_.login'
 import { Route as AppsSlugRouteImport } from './routes/apps.$slug'
+import { Route as AdminAppsIndexRouteImport } from './routes/admin.apps.index'
+import { Route as AdminAppsIdRouteImport } from './routes/admin.apps.$id'
+import { Route as AdminAppsNewRouteImport } from './routes/admin.apps.new'
 import { Route as ApiPublicMediaRouteImport } from './routes/api/public/media'
 
 const IndexRoute = IndexRouteImport.update({
@@ -66,6 +71,16 @@ const AuthenticatedProfileRoute = AuthenticatedProfileRouteImport.update({
   path: '/profile',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AdminApksRoute = AdminApksRouteImport.update({
+  id: '/apks',
+  path: '/apks',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminWebsitesRoute = AdminWebsitesRouteImport.update({
+  id: '/websites',
+  path: '/websites',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminLoginRoute = AdminLoginRouteImport.update({
   id: '/admin_/login',
   path: '/admin/login',
@@ -76,6 +91,21 @@ const AppsSlugRoute = AppsSlugRouteImport.update({
   path: '/apps/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminAppsIndexRoute = AdminAppsIndexRouteImport.update({
+  id: '/apps/',
+  path: '/apps/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAppsIdRoute = AdminAppsIdRouteImport.update({
+  id: '/apps/$id',
+  path: '/apps/$id',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAppsNewRoute = AdminAppsNewRouteImport.update({
+  id: '/apps/new',
+  path: '/apps/new',
+  getParentRoute: () => AdminRoute,
+} as any)
 const ApiPublicMediaRoute = ApiPublicMediaRouteImport.update({
   id: '/api/public/media',
   path: '/api/public/media',
@@ -84,44 +114,59 @@ const ApiPublicMediaRoute = ApiPublicMediaRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/admin': typeof AdminRoute
+  '/admin': typeof AdminRouteWithChildren
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
   '/search': typeof SearchRoute
   '/downloads': typeof AuthenticatedDownloadsRoute
   '/favorites': typeof AuthenticatedFavoritesRoute
   '/profile': typeof AuthenticatedProfileRoute
+  '/admin/apks': typeof AdminApksRoute
+  '/admin/websites': typeof AdminWebsitesRoute
   '/admin/login': typeof AdminLoginRoute
   '/apps/$slug': typeof AppsSlugRoute
+  '/admin/apps/$id': typeof AdminAppsIdRoute
+  '/admin/apps/new': typeof AdminAppsNewRoute
   '/api/public/media': typeof ApiPublicMediaRoute
+  '/admin/apps/': typeof AdminAppsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/admin': typeof AdminRoute
+  '/admin': typeof AdminRouteWithChildren
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
   '/search': typeof SearchRoute
   '/downloads': typeof AuthenticatedDownloadsRoute
   '/favorites': typeof AuthenticatedFavoritesRoute
   '/profile': typeof AuthenticatedProfileRoute
+  '/admin/apks': typeof AdminApksRoute
+  '/admin/websites': typeof AdminWebsitesRoute
   '/admin/login': typeof AdminLoginRoute
   '/apps/$slug': typeof AppsSlugRoute
+  '/admin/apps/$id': typeof AdminAppsIdRoute
+  '/admin/apps/new': typeof AdminAppsNewRoute
   '/api/public/media': typeof ApiPublicMediaRoute
+  '/admin/apps': typeof AdminAppsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
-  '/admin': typeof AdminRoute
+  '/admin': typeof AdminRouteWithChildren
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
   '/search': typeof SearchRoute
   '/_authenticated/downloads': typeof AuthenticatedDownloadsRoute
   '/_authenticated/favorites': typeof AuthenticatedFavoritesRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
+  '/admin/apks': typeof AdminApksRoute
+  '/admin/websites': typeof AdminWebsitesRoute
   '/admin_/login': typeof AdminLoginRoute
   '/apps/$slug': typeof AppsSlugRoute
+  '/admin/apps/$id': typeof AdminAppsIdRoute
+  '/admin/apps/new': typeof AdminAppsNewRoute
   '/api/public/media': typeof ApiPublicMediaRoute
+  '/admin/apps/': typeof AdminAppsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -134,9 +179,14 @@ export interface FileRouteTypes {
     | '/downloads'
     | '/favorites'
     | '/profile'
+    | '/admin/apks'
+    | '/admin/websites'
     | '/admin/login'
     | '/apps/$slug'
+    | '/admin/apps/$id'
+    | '/admin/apps/new'
     | '/api/public/media'
+    | '/admin/apps/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -147,9 +197,14 @@ export interface FileRouteTypes {
     | '/downloads'
     | '/favorites'
     | '/profile'
+    | '/admin/apks'
+    | '/admin/websites'
     | '/admin/login'
     | '/apps/$slug'
+    | '/admin/apps/$id'
+    | '/admin/apps/new'
     | '/api/public/media'
+    | '/admin/apps'
   id:
     | '__root__'
     | '/'
@@ -161,15 +216,20 @@ export interface FileRouteTypes {
     | '/_authenticated/downloads'
     | '/_authenticated/favorites'
     | '/_authenticated/profile'
+    | '/admin/apks'
+    | '/admin/websites'
     | '/admin_/login'
     | '/apps/$slug'
+    | '/admin/apps/$id'
+    | '/admin/apps/new'
     | '/api/public/media'
+    | '/admin/apps/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
-  AdminRoute: typeof AdminRoute
+  AdminRoute: typeof AdminRouteWithChildren
   AuthRoute: typeof AuthRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   SearchRoute: typeof SearchRoute
@@ -243,6 +303,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedProfileRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/admin/apks': {
+      id: '/admin/apks'
+      path: '/apks'
+      fullPath: '/admin/apks'
+      preLoaderRoute: typeof AdminApksRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/websites': {
+      id: '/admin/websites'
+      path: '/websites'
+      fullPath: '/admin/websites'
+      preLoaderRoute: typeof AdminWebsitesRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin_/login': {
       id: '/admin_/login'
       path: '/admin/login'
@@ -256,6 +330,27 @@ declare module '@tanstack/react-router' {
       fullPath: '/apps/$slug'
       preLoaderRoute: typeof AppsSlugRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/admin/apps/': {
+      id: '/admin/apps/'
+      path: '/apps'
+      fullPath: '/admin/apps/'
+      preLoaderRoute: typeof AdminAppsIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/apps/$id': {
+      id: '/admin/apps/$id'
+      path: '/apps/$id'
+      fullPath: '/admin/apps/$id'
+      preLoaderRoute: typeof AdminAppsIdRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/apps/new': {
+      id: '/admin/apps/new'
+      path: '/apps/new'
+      fullPath: '/admin/apps/new'
+      preLoaderRoute: typeof AdminAppsNewRouteImport
+      parentRoute: typeof AdminRoute
     }
     '/api/public/media': {
       id: '/api/public/media'
@@ -282,10 +377,28 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
 const AuthenticatedRouteRouteWithChildren =
   AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
+interface AdminRouteChildren {
+  AdminApksRoute: typeof AdminApksRoute
+  AdminWebsitesRoute: typeof AdminWebsitesRoute
+  AdminAppsIdRoute: typeof AdminAppsIdRoute
+  AdminAppsNewRoute: typeof AdminAppsNewRoute
+  AdminAppsIndexRoute: typeof AdminAppsIndexRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminApksRoute: AdminApksRoute,
+  AdminWebsitesRoute: AdminWebsitesRoute,
+  AdminAppsIdRoute: AdminAppsIdRoute,
+  AdminAppsNewRoute: AdminAppsNewRoute,
+  AdminAppsIndexRoute: AdminAppsIndexRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
-  AdminRoute: AdminRoute,
+  AdminRoute: AdminRouteWithChildren,
   AuthRoute: AuthRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   SearchRoute: SearchRoute,
