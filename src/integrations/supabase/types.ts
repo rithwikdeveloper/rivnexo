@@ -14,16 +14,404 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      admin_accounts: {
+        Row: {
+          created_at: string
+          user_id: string
+          username: string
+        }
+        Insert: {
+          created_at?: string
+          user_id: string
+          username: string
+        }
+        Update: {
+          created_at?: string
+          user_id?: string
+          username?: string
+        }
+        Relationships: []
+      }
+      apps: {
+        Row: {
+          apk_path: string | null
+          approval_status: string
+          banner_url: string | null
+          category_id: string | null
+          changelog: string | null
+          created_at: string
+          developer: string | null
+          download_count: number
+          file_size: number | null
+          full_description: string | null
+          icon_url: string | null
+          id: string
+          is_featured: boolean
+          is_published: boolean
+          kind: Database["public"]["Enums"]["app_kind"]
+          min_android: string | null
+          name: string
+          open_count: number
+          package_name: string | null
+          release_date: string | null
+          scan_status: string
+          screenshots: string[]
+          sha256: string | null
+          short_description: string | null
+          slug: string
+          tags: string[]
+          updated_at: string
+          version_code: number | null
+          version_name: string | null
+          website_url: string | null
+        }
+        Insert: {
+          apk_path?: string | null
+          approval_status?: string
+          banner_url?: string | null
+          category_id?: string | null
+          changelog?: string | null
+          created_at?: string
+          developer?: string | null
+          download_count?: number
+          file_size?: number | null
+          full_description?: string | null
+          icon_url?: string | null
+          id?: string
+          is_featured?: boolean
+          is_published?: boolean
+          kind: Database["public"]["Enums"]["app_kind"]
+          min_android?: string | null
+          name: string
+          open_count?: number
+          package_name?: string | null
+          release_date?: string | null
+          scan_status?: string
+          screenshots?: string[]
+          sha256?: string | null
+          short_description?: string | null
+          slug: string
+          tags?: string[]
+          updated_at?: string
+          version_code?: number | null
+          version_name?: string | null
+          website_url?: string | null
+        }
+        Update: {
+          apk_path?: string | null
+          approval_status?: string
+          banner_url?: string | null
+          category_id?: string | null
+          changelog?: string | null
+          created_at?: string
+          developer?: string | null
+          download_count?: number
+          file_size?: number | null
+          full_description?: string | null
+          icon_url?: string | null
+          id?: string
+          is_featured?: boolean
+          is_published?: boolean
+          kind?: Database["public"]["Enums"]["app_kind"]
+          min_android?: string | null
+          name?: string
+          open_count?: number
+          package_name?: string | null
+          release_date?: string | null
+          scan_status?: string
+          screenshots?: string[]
+          sha256?: string | null
+          short_description?: string | null
+          slug?: string
+          tags?: string[]
+          updated_at?: string
+          version_code?: number | null
+          version_name?: string | null
+          website_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "apps_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      audit_log: {
+        Row: {
+          action: string
+          admin_id: string | null
+          created_at: string
+          details: Json | null
+          id: string
+          target: string | null
+        }
+        Insert: {
+          action: string
+          admin_id?: string | null
+          created_at?: string
+          details?: Json | null
+          id?: string
+          target?: string | null
+        }
+        Update: {
+          action?: string
+          admin_id?: string | null
+          created_at?: string
+          details?: Json | null
+          id?: string
+          target?: string | null
+        }
+        Relationships: []
+      }
+      categories: {
+        Row: {
+          created_at: string
+          icon: string | null
+          id: string
+          name: string
+          slug: string
+          sort_order: number
+        }
+        Insert: {
+          created_at?: string
+          icon?: string | null
+          id?: string
+          name: string
+          slug: string
+          sort_order?: number
+        }
+        Update: {
+          created_at?: string
+          icon?: string | null
+          id?: string
+          name?: string
+          slug?: string
+          sort_order?: number
+        }
+        Relationships: []
+      }
+      downloads: {
+        Row: {
+          app_id: string
+          created_at: string
+          id: string
+          user_id: string | null
+          version_name: string | null
+        }
+        Insert: {
+          app_id: string
+          created_at?: string
+          id?: string
+          user_id?: string | null
+          version_name?: string | null
+        }
+        Update: {
+          app_id?: string
+          created_at?: string
+          id?: string
+          user_id?: string | null
+          version_name?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "downloads_app_id_fkey"
+            columns: ["app_id"]
+            isOneToOne: false
+            referencedRelation: "apps"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      favorites: {
+        Row: {
+          app_id: string
+          created_at: string
+          user_id: string
+        }
+        Insert: {
+          app_id: string
+          created_at?: string
+          user_id: string
+        }
+        Update: {
+          app_id?: string
+          created_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "favorites_app_id_fkey"
+            columns: ["app_id"]
+            isOneToOne: false
+            referencedRelation: "apps"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          display_name: string | null
+          email: string | null
+          id: string
+          is_blocked: boolean
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          display_name?: string | null
+          email?: string | null
+          id: string
+          is_blocked?: boolean
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          display_name?: string | null
+          email?: string | null
+          id?: string
+          is_blocked?: boolean
+        }
+        Relationships: []
+      }
+      reviews: {
+        Row: {
+          app_id: string
+          author_name: string | null
+          body: string | null
+          created_at: string
+          id: string
+          is_hidden: boolean
+          rating: number
+          user_id: string
+        }
+        Insert: {
+          app_id: string
+          author_name?: string | null
+          body?: string | null
+          created_at?: string
+          id?: string
+          is_hidden?: boolean
+          rating: number
+          user_id: string
+        }
+        Update: {
+          app_id?: string
+          author_name?: string | null
+          body?: string | null
+          created_at?: string
+          id?: string
+          is_hidden?: boolean
+          rating?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reviews_app_id_fkey"
+            columns: ["app_id"]
+            isOneToOne: false
+            referencedRelation: "apps"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      site_settings: {
+        Row: {
+          id: number
+          maintenance_mode: boolean
+          primary_color: string | null
+          site_name: string
+          support_email: string | null
+          tagline: string | null
+          updated_at: string
+        }
+        Insert: {
+          id?: number
+          maintenance_mode?: boolean
+          primary_color?: string | null
+          site_name?: string
+          support_email?: string | null
+          tagline?: string | null
+          updated_at?: string
+        }
+        Update: {
+          id?: number
+          maintenance_mode?: boolean
+          primary_color?: string | null
+          site_name?: string
+          support_email?: string | null
+          tagline?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
+      website_opens: {
+        Row: {
+          app_id: string
+          created_at: string
+          id: string
+          user_id: string | null
+        }
+        Insert: {
+          app_id: string
+          created_at?: string
+          id?: string
+          user_id?: string | null
+        }
+        Update: {
+          app_id?: string
+          created_at?: string
+          id?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "website_opens_app_id_fkey"
+            columns: ["app_id"]
+            isOneToOne: false
+            referencedRelation: "apps"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_kind: "website" | "apk"
+      app_role: "admin" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +538,9 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_kind: ["website", "apk"],
+      app_role: ["admin", "user"],
+    },
   },
 } as const
