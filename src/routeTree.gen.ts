@@ -10,11 +10,23 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as SearchRouteImport } from './routes/search'
+import { Route as AppsSlugRouteImport } from './routes/apps.$slug'
 import { Route as ApiPublicMediaRouteImport } from './routes/api/public/media'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SearchRoute = SearchRouteImport.update({
+  id: '/search',
+  path: '/search',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppsSlugRoute = AppsSlugRouteImport.update({
+  id: '/apps/$slug',
+  path: '/apps/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiPublicMediaRoute = ApiPublicMediaRouteImport.update({
@@ -25,27 +37,35 @@ const ApiPublicMediaRoute = ApiPublicMediaRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/search': typeof SearchRoute
+  '/apps/$slug': typeof AppsSlugRoute
   '/api/public/media': typeof ApiPublicMediaRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/search': typeof SearchRoute
+  '/apps/$slug': typeof AppsSlugRoute
   '/api/public/media': typeof ApiPublicMediaRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/search': typeof SearchRoute
+  '/apps/$slug': typeof AppsSlugRoute
   '/api/public/media': typeof ApiPublicMediaRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/api/public/media'
+  fullPaths: '/' | '/search' | '/apps/$slug' | '/api/public/media'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/api/public/media'
-  id: '__root__' | '/' | '/api/public/media'
+  to: '/' | '/search' | '/apps/$slug' | '/api/public/media'
+  id: '__root__' | '/' | '/search' | '/apps/$slug' | '/api/public/media'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  SearchRoute: typeof SearchRoute
+  AppsSlugRoute: typeof AppsSlugRoute
   ApiPublicMediaRoute: typeof ApiPublicMediaRoute
 }
 
@@ -56,6 +76,20 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/search': {
+      id: '/search'
+      path: '/search'
+      fullPath: '/search'
+      preLoaderRoute: typeof SearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/apps/$slug': {
+      id: '/apps/$slug'
+      path: '/apps/$slug'
+      fullPath: '/apps/$slug'
+      preLoaderRoute: typeof AppsSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/public/media': {
@@ -70,6 +104,8 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  SearchRoute: SearchRoute,
+  AppsSlugRoute: AppsSlugRoute,
   ApiPublicMediaRoute: ApiPublicMediaRoute,
 }
 export const routeTree = rootRouteImport
