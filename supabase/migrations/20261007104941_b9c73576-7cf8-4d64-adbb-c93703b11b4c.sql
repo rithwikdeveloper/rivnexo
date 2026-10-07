@@ -1,0 +1,1 @@
+create policy "admin media all" on storage.objects for all to authenticated using (bucket_id in ('app-media','apks') and public.has_role(auth.uid(),'admin')) with check (bucket_id in ('app-media','apks') and public.has_role(auth.uid(),'admin'));
