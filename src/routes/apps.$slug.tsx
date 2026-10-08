@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Download, ExternalLink, Heart, ShieldCheck, Star } from "lucide-react";
 import { SiteLayout, EmptyState } from "@/components/site-layout";
@@ -41,7 +41,14 @@ function Stars({ value, onChange }: { value: number; onChange?: (n: number) => v
 
 function AppDetail() {
   const { slug } = Route.useParams();
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
+  const navigate = Route.useNavigate();
+  useEffect(() => {
+    if (!authLoading && !user) {
+      toast.info("Please sign in first to open websites and APK apps");
+      navigate({ to: "/auth" });
+    }
+  }, [authLoading, user, navigate]);
   const qc = useQueryClient();
   const { data: app, isLoading } = useQuery(appBySlugQuery(slug));
   const { data: reviews = [] } = useQuery({ ...reviewsQuery(app?.id ?? ""), enabled: !!app });
@@ -110,7 +117,7 @@ function AppDetail() {
             </div>
             <div className="mt-5 flex flex-wrap gap-2">
               {app.kind === "website" ? (
-                <Button size="lg" onClick={open}><ExternalLink />Open Website</Button>
+                user ? <Button size="lg" onClick={open}><ExternalLink />Open Website</Button> : <Button size="lg" asChild><Link to="/auth"><ExternalLink />Sign in to open</Link></Button>
               ) : user ? (
                 <Button size="lg" variant="ink" onClick={() => dlMut.mutate()} disabled={dlMut.isPending}><Download />{dlMut.isPending ? "Preparing…" : "Download APK"}</Button>
               ) : (
