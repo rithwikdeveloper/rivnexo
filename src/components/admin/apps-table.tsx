@@ -25,7 +25,7 @@ export function AppsTable({ kind, title }: { kind?: "website" | "apk"; title: st
     },
   });
   const update = useMutation({
-    mutationFn: async ({ id, patch }: { id: string; patch: Partial<AppRow> }) => {
+    mutationFn: async ({ id, patch }: { id: string; patch: Partial<Omit<AppRow, "categories">> }) => {
       const { error } = await supabase.from("apps").update(patch).eq("id", id);
       if (error) throw error;
       await logAudit("app.update", id, patch);

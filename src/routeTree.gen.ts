@@ -18,7 +18,14 @@ import { Route as SearchRouteImport } from './routes/search'
 import { Route as AuthenticatedDownloadsRouteImport } from './routes/_authenticated/downloads'
 import { Route as AuthenticatedFavoritesRouteImport } from './routes/_authenticated/favorites'
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
+import { Route as AdminIndexRouteImport } from './routes/admin.index'
+import { Route as AdminAnalyticsRouteImport } from './routes/admin.analytics'
 import { Route as AdminApksRouteImport } from './routes/admin.apks'
+import { Route as AdminCategoriesRouteImport } from './routes/admin.categories'
+import { Route as AdminDownloadsRouteImport } from './routes/admin.downloads'
+import { Route as AdminReviewsRouteImport } from './routes/admin.reviews'
+import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
+import { Route as AdminUsersRouteImport } from './routes/admin.users'
 import { Route as AdminWebsitesRouteImport } from './routes/admin.websites'
 import { Route as AdminLoginRouteImport } from './routes/admin_.login'
 import { Route as AppsSlugRouteImport } from './routes/apps.$slug'
@@ -71,9 +78,44 @@ const AuthenticatedProfileRoute = AuthenticatedProfileRouteImport.update({
   path: '/profile',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAnalyticsRoute = AdminAnalyticsRouteImport.update({
+  id: '/analytics',
+  path: '/analytics',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminApksRoute = AdminApksRouteImport.update({
   id: '/apks',
   path: '/apks',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminCategoriesRoute = AdminCategoriesRouteImport.update({
+  id: '/categories',
+  path: '/categories',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminDownloadsRoute = AdminDownloadsRouteImport.update({
+  id: '/downloads',
+  path: '/downloads',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminReviewsRoute = AdminReviewsRouteImport.update({
+  id: '/reviews',
+  path: '/reviews',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminSettingsRoute = AdminSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminUsersRoute = AdminUsersRouteImport.update({
+  id: '/users',
+  path: '/users',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminWebsitesRoute = AdminWebsitesRouteImport.update({
@@ -121,10 +163,17 @@ export interface FileRoutesByFullPath {
   '/downloads': typeof AuthenticatedDownloadsRoute
   '/favorites': typeof AuthenticatedFavoritesRoute
   '/profile': typeof AuthenticatedProfileRoute
+  '/admin/analytics': typeof AdminAnalyticsRoute
   '/admin/apks': typeof AdminApksRoute
+  '/admin/categories': typeof AdminCategoriesRoute
+  '/admin/downloads': typeof AdminDownloadsRoute
+  '/admin/reviews': typeof AdminReviewsRoute
+  '/admin/settings': typeof AdminSettingsRoute
+  '/admin/users': typeof AdminUsersRoute
   '/admin/websites': typeof AdminWebsitesRoute
   '/admin/login': typeof AdminLoginRoute
   '/apps/$slug': typeof AppsSlugRoute
+  '/admin/': typeof AdminIndexRoute
   '/admin/apps/$id': typeof AdminAppsIdRoute
   '/admin/apps/new': typeof AdminAppsNewRoute
   '/api/public/media': typeof ApiPublicMediaRoute
@@ -132,17 +181,23 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/admin': typeof AdminRouteWithChildren
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
   '/search': typeof SearchRoute
   '/downloads': typeof AuthenticatedDownloadsRoute
   '/favorites': typeof AuthenticatedFavoritesRoute
   '/profile': typeof AuthenticatedProfileRoute
+  '/admin/analytics': typeof AdminAnalyticsRoute
   '/admin/apks': typeof AdminApksRoute
+  '/admin/categories': typeof AdminCategoriesRoute
+  '/admin/downloads': typeof AdminDownloadsRoute
+  '/admin/reviews': typeof AdminReviewsRoute
+  '/admin/settings': typeof AdminSettingsRoute
+  '/admin/users': typeof AdminUsersRoute
   '/admin/websites': typeof AdminWebsitesRoute
   '/admin/login': typeof AdminLoginRoute
   '/apps/$slug': typeof AppsSlugRoute
+  '/admin': typeof AdminIndexRoute
   '/admin/apps/$id': typeof AdminAppsIdRoute
   '/admin/apps/new': typeof AdminAppsNewRoute
   '/api/public/media': typeof ApiPublicMediaRoute
@@ -159,10 +214,17 @@ export interface FileRoutesById {
   '/_authenticated/downloads': typeof AuthenticatedDownloadsRoute
   '/_authenticated/favorites': typeof AuthenticatedFavoritesRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
+  '/admin/analytics': typeof AdminAnalyticsRoute
   '/admin/apks': typeof AdminApksRoute
+  '/admin/categories': typeof AdminCategoriesRoute
+  '/admin/downloads': typeof AdminDownloadsRoute
+  '/admin/reviews': typeof AdminReviewsRoute
+  '/admin/settings': typeof AdminSettingsRoute
+  '/admin/users': typeof AdminUsersRoute
   '/admin/websites': typeof AdminWebsitesRoute
   '/admin_/login': typeof AdminLoginRoute
   '/apps/$slug': typeof AppsSlugRoute
+  '/admin/': typeof AdminIndexRoute
   '/admin/apps/$id': typeof AdminAppsIdRoute
   '/admin/apps/new': typeof AdminAppsNewRoute
   '/api/public/media': typeof ApiPublicMediaRoute
@@ -179,10 +241,17 @@ export interface FileRouteTypes {
     | '/downloads'
     | '/favorites'
     | '/profile'
+    | '/admin/analytics'
     | '/admin/apks'
+    | '/admin/categories'
+    | '/admin/downloads'
+    | '/admin/reviews'
+    | '/admin/settings'
+    | '/admin/users'
     | '/admin/websites'
     | '/admin/login'
     | '/apps/$slug'
+    | '/admin/'
     | '/admin/apps/$id'
     | '/admin/apps/new'
     | '/api/public/media'
@@ -190,17 +259,23 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/admin'
     | '/auth'
     | '/reset-password'
     | '/search'
     | '/downloads'
     | '/favorites'
     | '/profile'
+    | '/admin/analytics'
     | '/admin/apks'
+    | '/admin/categories'
+    | '/admin/downloads'
+    | '/admin/reviews'
+    | '/admin/settings'
+    | '/admin/users'
     | '/admin/websites'
     | '/admin/login'
     | '/apps/$slug'
+    | '/admin'
     | '/admin/apps/$id'
     | '/admin/apps/new'
     | '/api/public/media'
@@ -216,10 +291,17 @@ export interface FileRouteTypes {
     | '/_authenticated/downloads'
     | '/_authenticated/favorites'
     | '/_authenticated/profile'
+    | '/admin/analytics'
     | '/admin/apks'
+    | '/admin/categories'
+    | '/admin/downloads'
+    | '/admin/reviews'
+    | '/admin/settings'
+    | '/admin/users'
     | '/admin/websites'
     | '/admin_/login'
     | '/apps/$slug'
+    | '/admin/'
     | '/admin/apps/$id'
     | '/admin/apps/new'
     | '/api/public/media'
@@ -303,11 +385,60 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedProfileRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/admin/': {
+      id: '/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/analytics': {
+      id: '/admin/analytics'
+      path: '/analytics'
+      fullPath: '/admin/analytics'
+      preLoaderRoute: typeof AdminAnalyticsRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/apks': {
       id: '/admin/apks'
       path: '/apks'
       fullPath: '/admin/apks'
       preLoaderRoute: typeof AdminApksRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/categories': {
+      id: '/admin/categories'
+      path: '/categories'
+      fullPath: '/admin/categories'
+      preLoaderRoute: typeof AdminCategoriesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/downloads': {
+      id: '/admin/downloads'
+      path: '/downloads'
+      fullPath: '/admin/downloads'
+      preLoaderRoute: typeof AdminDownloadsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/reviews': {
+      id: '/admin/reviews'
+      path: '/reviews'
+      fullPath: '/admin/reviews'
+      preLoaderRoute: typeof AdminReviewsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/settings': {
+      id: '/admin/settings'
+      path: '/settings'
+      fullPath: '/admin/settings'
+      preLoaderRoute: typeof AdminSettingsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/users': {
+      id: '/admin/users'
+      path: '/users'
+      fullPath: '/admin/users'
+      preLoaderRoute: typeof AdminUsersRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/websites': {
@@ -378,16 +509,30 @@ const AuthenticatedRouteRouteWithChildren =
   AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
 interface AdminRouteChildren {
+  AdminAnalyticsRoute: typeof AdminAnalyticsRoute
   AdminApksRoute: typeof AdminApksRoute
+  AdminCategoriesRoute: typeof AdminCategoriesRoute
+  AdminDownloadsRoute: typeof AdminDownloadsRoute
+  AdminReviewsRoute: typeof AdminReviewsRoute
+  AdminSettingsRoute: typeof AdminSettingsRoute
+  AdminUsersRoute: typeof AdminUsersRoute
   AdminWebsitesRoute: typeof AdminWebsitesRoute
+  AdminIndexRoute: typeof AdminIndexRoute
   AdminAppsIdRoute: typeof AdminAppsIdRoute
   AdminAppsNewRoute: typeof AdminAppsNewRoute
   AdminAppsIndexRoute: typeof AdminAppsIndexRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
+  AdminAnalyticsRoute: AdminAnalyticsRoute,
   AdminApksRoute: AdminApksRoute,
+  AdminCategoriesRoute: AdminCategoriesRoute,
+  AdminDownloadsRoute: AdminDownloadsRoute,
+  AdminReviewsRoute: AdminReviewsRoute,
+  AdminSettingsRoute: AdminSettingsRoute,
+  AdminUsersRoute: AdminUsersRoute,
   AdminWebsitesRoute: AdminWebsitesRoute,
+  AdminIndexRoute: AdminIndexRoute,
   AdminAppsIdRoute: AdminAppsIdRoute,
   AdminAppsNewRoute: AdminAppsNewRoute,
   AdminAppsIndexRoute: AdminAppsIndexRoute,
