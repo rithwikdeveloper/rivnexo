@@ -1,4 +1,7 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
+import type { MouseEvent } from "react";
+import { toast } from "sonner";
+import { useAuth } from "@/hooks/use-auth";
 import { Download, ExternalLink, Globe, Smartphone } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { compact, mediaUrl } from "@/lib/media";
@@ -36,14 +39,26 @@ export function ActionLabel({ kind }: { kind: "website" | "apk" }) {
   );
 }
 
+export function useSignInGate() {
+  const { user, loading } = useAuth();
+  const navigate = useNavigate();
+  return (e: MouseEvent) => {
+    if (loading || user) return;
+    e.preventDefault();
+    toast.info("Please sign in first to open websites and APK apps");
+    navigate({ to: "/auth" });
+  };
+}
+
 function usage(app: AppRow) {
   return app.kind === "apk" ? `${compact(app.download_count)} downloads` : `${compact(app.open_count)} opens`;
 }
 
 export function FeaturedCard({ app }: { app: AppRow }) {
+  const gate = useSignInGate();
   const banner = mediaUrl(app.banner_url);
   return (
-    <Link to="/apps/$slug" params={{ slug: app.slug }} className="glass-panel w-[300px] shrink-0 overflow-hidden rounded-2xl transition hover:-translate-y-0.5">
+    <Link to="/apps/$slug" params={{ slug: app.slug }} onClick={gate} className="glass-panel w-[300px] shrink-0 overflow-hidden rounded-2xl transition hover:-translate-y-0.5">
       <div className={cn("aspect-[16/9]", app.kind === "apk" ? "bg-accent/10" : "bg-primary/10")}>
         {banner && <img src={banner} alt="" loading="lazy" className="size-full object-cover" />}
       </div>
@@ -66,8 +81,9 @@ export function FeaturedCard({ app }: { app: AppRow }) {
 }
 
 export function RowCard({ app }: { app: AppRow }) {
+  const gate = useSignInGate();
   return (
-    <Link to="/apps/$slug" params={{ slug: app.slug }} className="glass-panel flex gap-4 rounded-2xl p-4 transition hover:-translate-y-0.5">
+    <Link to="/apps/$slug" params={{ slug: app.slug }} onClick={gate} className="glass-panel flex gap-4 rounded-2xl p-4 transition hover:-translate-y-0.5">
       <AppIcon app={app} />
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-2">
@@ -86,8 +102,9 @@ export function RowCard({ app }: { app: AppRow }) {
 }
 
 export function CompactCard({ app }: { app: AppRow }) {
+  const gate = useSignInGate();
   return (
-    <Link to="/apps/$slug" params={{ slug: app.slug }} className="glass-panel rounded-2xl p-5 transition hover:-translate-y-0.5">
+    <Link to="/apps/$slug" params={{ slug: app.slug }} onClick={gate} className="glass-panel rounded-2xl p-5 transition hover:-translate-y-0.5">
       <div className="flex items-center gap-3">
         <AppIcon app={app} size="lg" />
         <div className="min-w-0">
