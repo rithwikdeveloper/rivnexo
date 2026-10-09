@@ -3,7 +3,8 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { Download, ExternalLink, Heart, MessageCircle, Share2, ShieldCheck, Star } from "lucide-react";
+import { Download, ExternalLink, Heart, ShieldCheck, Star } from "lucide-react";
+import { ShareDialog } from "@/components/share-dialog";
 import { SiteLayout, EmptyState } from "@/components/site-layout";
 import { AppIcon, TypeBadge } from "@/components/app-card";
 import { Button } from "@/components/ui/button";
@@ -124,16 +125,7 @@ function AppDetail() {
                 <Button size="lg" variant="ink" asChild><Link to="/auth"><Download />Sign in to download</Link></Button>
               )}
               {user && <Button size="lg" variant="outline" onClick={() => favMut.mutate()}><Heart className={cn(isFav && "fill-destructive text-destructive")} />{isFav ? "Saved" : "Save"}</Button>}
-              <Button size="lg" variant="outline" onClick={async () => {
-                const url = window.location.href;
-                const text = `Check out ${app.name} on Rivnexo`;
-                if (navigator.share) { try { await navigator.share({ title: app.name, text, url }); } catch { /* cancelled */ } return; }
-                await navigator.clipboard?.writeText(url).catch(() => {});
-                toast.success("Link copied");
-              }}><Share2 />Share</Button>
-              <Button size="lg" variant="outline" asChild>
-                <a href={`https://wa.me/?text=${encodeURIComponent(`Check out ${app.name} on Rivnexo: ${typeof window !== "undefined" ? window.location.href : ""}`)}`} target="_blank" rel="noopener noreferrer"><MessageCircle />WhatsApp</a>
-              </Button>
+              <ShareDialog name={app.name} />
             </div>
           </div>
         </div>
