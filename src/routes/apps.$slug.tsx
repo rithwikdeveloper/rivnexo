@@ -3,7 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { Download, ExternalLink, Heart, ShieldCheck, Star } from "lucide-react";
+import { Download, ExternalLink, Heart, MessageCircle, Share2, ShieldCheck, Star } from "lucide-react";
 import { SiteLayout, EmptyState } from "@/components/site-layout";
 import { AppIcon, TypeBadge } from "@/components/app-card";
 import { Button } from "@/components/ui/button";
@@ -41,7 +41,7 @@ function Stars({ value, onChange }: { value: number; onChange?: (n: number) => v
 
 function AppDetail() {
   const { slug } = Route.useParams();
-  const { user, loading: authLoading } = useAuth();
+  const { user, loading: authLoading, isAdmin } = useAuth();
   const navigate = Route.useNavigate();
   useEffect(() => {
     if (!authLoading && !user) {
@@ -112,7 +112,7 @@ function AppDetail() {
             <p className="mt-1 text-sm text-muted-foreground">{[app.developer, app.categories?.name].filter(Boolean).join(" · ")}</p>
             <div className="mt-3 flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
               <span className="flex items-center gap-1"><Star className="size-4 fill-star text-star" />{avg ? avg.toFixed(1) : "No ratings"} ({reviews.length})</span>
-              <span>{app.kind === "apk" ? `${compact(app.download_count)} downloads` : `${compact(app.open_count)} opens`}</span>
+              {isAdmin && <span>{app.kind === "apk" ? `${compact(app.download_count)} downloads` : `${compact(app.open_count)} opens`}</span>}
               {app.kind === "apk" && app.scan_status === "clean" && <span className="flex items-center gap-1 text-success"><ShieldCheck className="size-4" />Security scan passed</span>}
             </div>
             <div className="mt-5 flex flex-wrap gap-2">
@@ -124,6 +124,16 @@ function AppDetail() {
                 <Button size="lg" variant="ink" asChild><Link to="/auth"><Download />Sign in to download</Link></Button>
               )}
               {user && <Button size="lg" variant="outline" onClick={() => favMut.mutate()}><Heart className={cn(isFav && "fill-destructive text-destructive")} />{isFav ? "Saved" : "Save"}</Button>}
+              <Button size="lg" variant="outline" onClick={async () => {
+                const url = window.location.href;
+                const text = `Check out ${app.name} on Rivnexo`;
+                if (navigator.share) { try { await navigator.share({ title: app.name, text, url }); } catch { /* cancelled */ } return; }
+                await navigator.clipboard?.writeText(url).catch(() => {});
+                toast.success("Link copied");
+              }}><Share2 />Share</Button>
+              <Button size="lg" variant="outline" asChild>
+                <a href={`https://wa.me/?text=${encodeURIComponent(`Check out ${app.name} on Rivnexo: ${typeof window !== "undefined" ? window.location.href : ""}`)}`} target="_blank" rel="noopener noreferrer"><MessageCircle />WhatsApp</a>
+              </Button>
             </div>
           </div>
         </div>

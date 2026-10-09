@@ -55,6 +55,7 @@ function usage(app: AppRow) {
 }
 
 export function FeaturedCard({ app }: { app: AppRow }) {
+  const { isAdmin } = useAuth();
   const gate = useSignInGate();
   const banner = mediaUrl(app.banner_url);
   return (
@@ -72,7 +73,7 @@ export function FeaturedCard({ app }: { app: AppRow }) {
         </div>
         <p className="mt-3 line-clamp-2 text-sm text-pretty text-muted-foreground">{app.short_description}</p>
         <div className="mt-4 flex items-center justify-between">
-          <span className="text-xs font-medium text-star">{usage(app)}</span>
+          <span className="text-xs font-medium text-star">{isAdmin ? usage(app) : ""}</span>
           <ActionLabel kind={app.kind} />
         </div>
       </div>
@@ -81,6 +82,7 @@ export function FeaturedCard({ app }: { app: AppRow }) {
 }
 
 export function RowCard({ app }: { app: AppRow }) {
+  const { isAdmin } = useAuth();
   const gate = useSignInGate();
   return (
     <Link to="/apps/$slug" params={{ slug: app.slug }} onClick={gate} className="glass-panel flex gap-4 rounded-2xl p-4 transition hover:-translate-y-0.5">
@@ -93,7 +95,7 @@ export function RowCard({ app }: { app: AppRow }) {
         <p className="truncate text-xs text-muted-foreground">{[app.developer, app.categories?.name].filter(Boolean).join(" · ")}</p>
         <p className="mt-1 line-clamp-1 text-sm text-pretty text-muted-foreground">{app.short_description}</p>
         <div className="mt-3 flex items-center justify-between">
-          <span className="text-xs font-medium text-star">{usage(app)}</span>
+          <span className="text-xs font-medium text-star">{isAdmin ? usage(app) : ""}</span>
           <ActionLabel kind={app.kind} />
         </div>
       </div>
@@ -102,6 +104,7 @@ export function RowCard({ app }: { app: AppRow }) {
 }
 
 export function CompactCard({ app }: { app: AppRow }) {
+  const { isAdmin } = useAuth();
   const gate = useSignInGate();
   return (
     <Link to="/apps/$slug" params={{ slug: app.slug }} onClick={gate} className="glass-panel rounded-2xl p-5 transition hover:-translate-y-0.5">
@@ -113,7 +116,7 @@ export function CompactCard({ app }: { app: AppRow }) {
         </div>
       </div>
       <div className="mt-4 flex items-center justify-between">
-        <span className="text-xs font-medium text-star">{usage(app)}</span>
+        <span className="text-xs font-medium text-star">{isAdmin ? usage(app) : ""}</span>
         <ActionLabel kind={app.kind} />
       </div>
     </Link>
