@@ -48,7 +48,7 @@ function Home() {
       <section className="mx-auto max-w-7xl px-4 pb-10 pt-14 sm:px-6">
         <div className="mx-auto max-w-3xl text-center">
           <span className="inline-flex items-center gap-2 rounded-full bg-secondary px-3 py-1 text-xs font-medium text-primary ring-1 ring-border backdrop-blur">Curated apps · checksum-verified APKs</span>
-          <h1 className="mx-auto mt-5 max-w-[20ch] text-balance text-4xl font-semibold leading-tight sm:text-5xl">The marketplace for apps that run anywhere.</h1>
+          <h1 className="mx-auto mt-5 max-w-[20ch] text-balance text-4xl font-semibold leading-tight sm:text-5xl">{tagline}</h1>
           <p className="mx-auto mt-4 max-w-[52ch] text-pretty text-base text-muted-foreground sm:text-lg">Open a website app in a tap, or download a verified Android APK. One storefront, no storefront fees.</p>
         </div>
         <form onSubmit={go} className="glass-panel mx-auto mt-8 max-w-2xl rounded-2xl p-2">
