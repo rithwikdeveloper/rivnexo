@@ -3,7 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { Download, ExternalLink, Heart, ShieldCheck, Star } from "lucide-react";
+import { Download, ExternalLink, Heart, MessageCircle, Share2, ShieldCheck, Star } from "lucide-react";
 import { SiteLayout, EmptyState } from "@/components/site-layout";
 import { AppIcon, TypeBadge } from "@/components/app-card";
 import { Button } from "@/components/ui/button";
@@ -41,7 +41,7 @@ function Stars({ value, onChange }: { value: number; onChange?: (n: number) => v
 
 function AppDetail() {
   const { slug } = Route.useParams();
-  const { user, loading: authLoading } = useAuth();
+  const { user, loading: authLoading, isAdmin } = useAuth();
   const navigate = Route.useNavigate();
   useEffect(() => {
     if (!authLoading && !user) {
