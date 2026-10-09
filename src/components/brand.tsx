@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { cn } from "@/lib/utils";
+import { useSiteSettings } from "@/hooks/use-site-settings";
 
 export function LogoMark({ className }: { className?: string }) {
   return (
@@ -12,10 +13,11 @@ export function LogoMark({ className }: { className?: string }) {
 }
 
 export function Logo({ to = "/", className }: { to?: string; className?: string }) {
+  const { siteName } = useSiteSettings();
   return (
     <Link to={to} className={cn("flex items-center gap-2 font-display text-lg font-semibold tracking-tight", className)}>
       <LogoMark />
-      Rivnexo
+      {siteName}
     </Link>
   );
 }
