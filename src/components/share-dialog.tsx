@@ -30,7 +30,12 @@ export function ShareDialog({ name }: { name: string }) {
   const url = typeof window !== "undefined" ? window.location.href : "";
   const text = `Check out ${name} on Rivnexo`;
   const msg = encodeURIComponent(`${text}: ${url}`);
-  const whatsapp = isMobile() ? `whatsapp://send?text=${msg}` : `https://web.whatsapp.com/send?text=${msg}`;
+  const onWhatsApp = async () => {
+    // Copy first as a backup, then launch the WhatsApp app directly (avoids web-page blocks).
+    await copyText(`${text}: ${url}`);
+    toast.success("Opening WhatsApp… Message also copied — just paste it if needed.");
+    window.location.href = `whatsapp://send?text=${msg}`;
+  };
   const canNative = typeof navigator !== "undefined" && !!navigator.share && isMobile();
 
   const onCopy = async () => {
@@ -53,9 +58,7 @@ export function ShareDialog({ name }: { name: string }) {
           <Button onClick={onCopy} variant="outline">{copied ? <Check /> : <Copy />}{copied ? "Copied" : "Copy"}</Button>
         </div>
         <div className="grid grid-cols-3 gap-2">
-          <Button variant="outline" asChild>
-            <a href={whatsapp} target="_blank" rel="noopener noreferrer"><MessageCircle />WhatsApp</a>
-          </Button>
+          <Button variant="outline" onClick={onWhatsApp}><MessageCircle />WhatsApp</Button>
           <Button variant="outline" asChild>
             <a href={`https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`} target="_blank" rel="noopener noreferrer"><Send />Telegram</a>
           </Button>
