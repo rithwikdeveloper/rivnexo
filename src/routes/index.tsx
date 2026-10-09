@@ -1,6 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useSiteSettings } from "@/hooks/use-site-settings";
 import { Search } from "lucide-react";
 import { SiteLayout, EmptyState } from "@/components/site-layout";
 import { CardSkeleton, CompactCard, FeaturedCard, RowCard } from "@/components/app-card";
@@ -37,6 +38,8 @@ function Home() {
   const [type, setType] = useState<"all" | "website" | "apk">("all");
   const { data: cats } = useQuery(categoriesQuery);
   const { data, isLoading } = useQuery(homeQuery);
+  const { siteName, tagline } = useSiteSettings();
+  useEffect(() => { document.title = `${siteName} — ${tagline}`; }, [siteName, tagline]);
   const go = (e: React.FormEvent) => {
     e.preventDefault();
     navigate({ to: "/search", search: { q: q || undefined, type: type === "all" ? undefined : type } });
