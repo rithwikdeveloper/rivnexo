@@ -8,6 +8,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSepara
 import { useAuth } from "@/hooks/use-auth";
 import { supabase } from "@/integrations/supabase/client";
 import { useTheme } from "@/hooks/use-theme";
+import { useSiteSettings } from "@/hooks/use-site-settings";
 
 export function SiteHeader() {
   const { user, isAdmin } = useAuth();
