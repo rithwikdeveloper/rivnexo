@@ -24,6 +24,7 @@ export function SiteHeader() {
       <Link to="/search" className="hover:text-foreground">Browse</Link>
       <Link to="/search" search={{ type: "website" }} className="hover:text-foreground">Websites</Link>
       <Link to="/search" search={{ type: "apk" }} className="hover:text-foreground">Android</Link>
+      <Link to="/about" className="hover:text-foreground">About</Link>
     </>
   );
   return (
