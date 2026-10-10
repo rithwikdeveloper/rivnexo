@@ -10,5 +10,7 @@ export function useSiteSettings() {
   return {
     siteName: data?.site_name || "Rivnexo",
     tagline: data?.tagline || "The marketplace for apps that run anywhere.",
+    maintenance: !!data?.maintenance_mode,
+    supportEmail: data?.support_email || "",
   };
 }
