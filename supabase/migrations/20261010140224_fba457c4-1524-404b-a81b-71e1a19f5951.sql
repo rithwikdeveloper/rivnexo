@@ -1,0 +1,2 @@
+ALTER TABLE public.site_settings ADD COLUMN IF NOT EXISTS owner_name text DEFAULT 'Rithwik Developer';
+UPDATE public.site_settings SET owner_name = 'Rithwik Developer' WHERE id = 1 AND owner_name IS NULL;

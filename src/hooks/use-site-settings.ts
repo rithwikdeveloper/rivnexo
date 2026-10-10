@@ -12,5 +12,6 @@ export function useSiteSettings() {
     tagline: data?.tagline || "The marketplace for apps that run anywhere.",
     maintenance: !!data?.maintenance_mode,
     supportEmail: data?.support_email || "",
+    ownerName: ((data as { owner_name?: string | null } | null)?.owner_name) || "",
   };
 }

@@ -323,6 +323,7 @@ export type Database = {
         Row: {
           id: number
           maintenance_mode: boolean
+          owner_name: string | null
           primary_color: string | null
           site_name: string
           support_email: string | null
@@ -332,6 +333,7 @@ export type Database = {
         Insert: {
           id?: number
           maintenance_mode?: boolean
+          owner_name?: string | null
           primary_color?: string | null
           site_name?: string
           support_email?: string | null
@@ -341,6 +343,7 @@ export type Database = {
         Update: {
           id?: number
           maintenance_mode?: boolean
+          owner_name?: string | null
           primary_color?: string | null
           site_name?: string
           support_email?: string | null
