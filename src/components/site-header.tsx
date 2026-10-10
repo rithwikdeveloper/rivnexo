@@ -24,6 +24,7 @@ export function SiteHeader() {
       <Link to="/search" className="hover:text-foreground">Browse</Link>
       <Link to="/search" search={{ type: "website" }} className="hover:text-foreground">Websites</Link>
       <Link to="/search" search={{ type: "apk" }} className="hover:text-foreground">Android</Link>
+      <Link to="/about" className="hover:text-foreground">About</Link>
     </>
   );
   return (
@@ -90,9 +91,12 @@ export function SiteFooter() {
         <Logo />
         <div className="flex flex-col items-center gap-1 sm:items-end">
           <p>Independent marketplace · not affiliated with any app store.</p>
-          {ownerName && (
-            <p>Owned &amp; developed by <span className="font-medium text-primary">{ownerName}</span></p>
-          )}
+          <div className="flex items-center gap-3">
+            {ownerName && (
+              <p>Owned &amp; developed by <span className="font-medium text-primary">{ownerName}</span></p>
+            )}
+            <Link to="/about" className="text-primary hover:underline">About</Link>
+          </div>
         </div>
       </div>
     </footer>
