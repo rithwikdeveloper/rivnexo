@@ -91,9 +91,12 @@ export function SiteFooter() {
         <Logo />
         <div className="flex flex-col items-center gap-1 sm:items-end">
           <p>Independent marketplace · not affiliated with any app store.</p>
-          {ownerName && (
-            <p>Owned &amp; developed by <span className="font-medium text-primary">{ownerName}</span></p>
-          )}
+          <div className="flex items-center gap-3">
+            {ownerName && (
+              <p>Owned &amp; developed by <span className="font-medium text-primary">{ownerName}</span></p>
+            )}
+            <Link to="/about" className="text-primary hover:underline">About</Link>
+          </div>
         </div>
       </div>
     </footer>
