@@ -17,10 +17,10 @@ function SettingsPage() {
     queryKey: ["site-settings"],
     queryFn: async () => (await supabase.from("site_settings").select("*").eq("id", 1).maybeSingle()).data,
   });
-  const [f, setF] = useState({ site_name: "", tagline: "", support_email: "", maintenance_mode: false });
+  const [f, setF] = useState({ site_name: "", tagline: "", support_email: "", owner_name: "", maintenance_mode: false });
   const [saving, setSaving] = useState(false);
   useEffect(() => {
-    if (data) setF({ site_name: data.site_name, tagline: data.tagline ?? "", support_email: data.support_email ?? "", maintenance_mode: data.maintenance_mode });
+    if (data) setF({ site_name: data.site_name, tagline: data.tagline ?? "", support_email: data.support_email ?? "", owner_name: (data as { owner_name?: string | null }).owner_name ?? "", maintenance_mode: data.maintenance_mode });
   }, [data]);
   const save = async () => {
     setSaving(true);
@@ -39,6 +39,7 @@ function SettingsPage() {
         <div className="space-y-1"><Label>Site name</Label><Input value={f.site_name} onChange={(e) => setF({ ...f, site_name: e.target.value })} /></div>
         <div className="space-y-1"><Label>Tagline</Label><Input value={f.tagline} onChange={(e) => setF({ ...f, tagline: e.target.value })} /></div>
         <div className="space-y-1"><Label>Support email</Label><Input type="email" value={f.support_email} onChange={(e) => setF({ ...f, support_email: e.target.value })} /></div>
+        <div className="space-y-1"><Label>Owner name</Label><Input value={f.owner_name} onChange={(e) => setF({ ...f, owner_name: e.target.value })} placeholder="e.g. Rithwik Developer" /></div>
         <div className="flex items-center justify-between"><Label>Maintenance mode</Label><Switch checked={f.maintenance_mode} onCheckedChange={(v) => setF({ ...f, maintenance_mode: v })} /></div>
         <Button onClick={save} disabled={saving || !data}>Save</Button>
       </div>
