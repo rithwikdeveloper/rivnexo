@@ -2,6 +2,16 @@
 export function mediaUrl(ref?: string | null): string | undefined {
   if (!ref) return undefined;
   if (/^https?:\/\//.test(ref)) return ref;
+
+  // App icons, banners and screenshots are public presentation assets. Using
+  // Supabase's public object URL keeps them working in the local Vite client
+  // too, where the server-only service-role key is intentionally unavailable.
+  const base = import.meta.env.VITE_SUPABASE_URL as string | undefined;
+  if (base) {
+    const path = ref.split("/").map(encodeURIComponent).join("/");
+    return `${base.replace(/\/$/, "")}/storage/v1/object/public/app-media/${path}`;
+  }
+
   return `/api/public/media?p=${encodeURIComponent(ref)}`;
 }
 

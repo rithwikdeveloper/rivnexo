@@ -8,33 +8,14 @@ export const adminLogin = createServerFn({ method: "POST" })
     z.object({ username: z.string().trim().min(1).max(64), password: z.string().min(1).max(200) }).parse(d),
   )
   .handler(async ({ data }) => {
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const username = data.username.toLowerCase();
     const invalid = { ok: false as const, error: "Invalid username or password." };
 
-    const { count } = await supabaseAdmin.from("admin_accounts").select("*", { count: "exact", head: true });
-    if (!count) {
-      const envU = (process.env["ADMIN_USERNAME"] ?? "").toLowerCase().trim();
-      const envP = process.env["ADMIN_PASSWORD"] ?? "";
-      if (!envU || !envP || username !== envU || data.password !== envP) return invalid;
-      const email = `${username.replace(/[^a-z0-9._-]/g, "")}@admin.rivnexo.app`;
-      const { data: created, error } = await supabaseAdmin.auth.admin.createUser({
-        email, password: envP, email_confirm: true, user_metadata: { display_name: username },
-      });
-      if (error || !created.user) return { ok: false as const, error: "Could not create admin account." };
-      await supabaseAdmin.from("admin_accounts").insert({ user_id: created.user.id, username });
-      await supabaseAdmin.from("user_roles").insert({ user_id: created.user.id, role: "admin" });
-    }
-
-    const { data: acct } = await supabaseAdmin.from("admin_accounts").select("user_id").eq("username", username).maybeSingle();
-    if (!acct) return invalid;
-    const { data: u } = await supabaseAdmin.auth.admin.getUserById(acct.user_id);
-    const email = u.user?.email;
-    if (!email) return invalid;
-
     const { createClient } = await import("@supabase/supabase-js");
-    const key = process.env["SUPABASE_PUBLISHABLE_KEY"]!;
-    const pub = createClient(process.env["SUPABASE_URL"]!, key, {
+    const key = process.env["SUPABASE_PUBLISHABLE_KEY"] ?? process.env["VITE_SUPABASE_PUBLISHABLE_KEY"];
+    const url = process.env["SUPABASE_URL"] ?? process.env["VITE_SUPABASE_URL"];
+    if (!key || !url) return invalid;
+    const pub = createClient(url, key, {
       auth: { persistSession: false, autoRefreshToken: false },
       global: {
         fetch: (input, init) => {
@@ -45,7 +26,45 @@ export const adminLogin = createServerFn({ method: "POST" })
         },
       },
     });
-    const { data: s, error } = await pub.auth.signInWithPassword({ email, password: data.password });
+
+    // Normal admin logins do not need the service-role key. The account email
+    // is deterministic for the original username used during provisioning.
+    const email = `${username.replace(/[^a-z0-9._-]/g, "")}@admin.rivnexo.app`;
+    const { data: signedIn, error: signInError } = await pub.auth.signInWithPassword({ email, password: data.password });
+    if (!signInError && signedIn.user && signedIn.session) {
+      const { data: role } = await pub.rpc("has_role", { _user_id: signedIn.user.id, _role: "admin" });
+      if (role) {
+        await pub.from("audit_log").insert({ admin_id: signedIn.user.id, action: "admin.login" });
+        return { ok: true as const, access_token: signedIn.session.access_token, refresh_token: signedIn.session.refresh_token };
+      }
+    }
+
+    // Only the first-admin bootstrap needs the privileged server key. Keep the
+    // existing setup available when it is configured, but do not make every
+    // local login fail when the key is intentionally absent.
+    if (!process.env["SUPABASE_SERVICE_ROLE_KEY"]) return invalid;
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+
+    let { data: acct } = await supabaseAdmin.from("admin_accounts").select("user_id").eq("username", username).maybeSingle();
+    if (!acct) {
+      const envU = (process.env["ADMIN_USERNAME"] ?? "").toLowerCase().trim();
+      const envP = process.env["ADMIN_PASSWORD"] ?? "";
+      if (!envU || !envP || username !== envU || data.password !== envP) return invalid;
+      const { data: created, error } = await supabaseAdmin.auth.admin.createUser({
+        email, password: envP, email_confirm: true, user_metadata: { display_name: username },
+      });
+      if (error || !created.user) return { ok: false as const, error: "Could not create admin account." };
+      const { error: accountError } = await supabaseAdmin.from("admin_accounts").insert({ user_id: created.user.id, username });
+      const { error: roleError } = await supabaseAdmin.from("user_roles").insert({ user_id: created.user.id, role: "admin" });
+      if (accountError || roleError) return { ok: false as const, error: "Could not finish admin account setup." };
+      acct = { user_id: created.user.id };
+    }
+
+    const { data: u } = await supabaseAdmin.auth.admin.getUserById(acct.user_id);
+    const accountEmail = u.user?.email;
+    if (!accountEmail) return invalid;
+
+    const { data: s, error } = await pub.auth.signInWithPassword({ email: accountEmail, password: data.password });
     if (error || !s.session) return invalid;
     const { data: role } = await supabaseAdmin.from("user_roles").select("role").eq("user_id", acct.user_id).eq("role", "admin").maybeSingle();
     if (!role) return invalid;
