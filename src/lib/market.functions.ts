@@ -115,3 +115,40 @@ export const adminSetBlocked = createServerFn({ method: "POST" })
     await supabaseAdmin.from("audit_log").insert({ admin_id: context.userId, action: data.blocked ? "user.block" : "user.unblock", target: data.userId });
     return { ok: true };
   });
+
+/** Admin changes own username and/or password. Requires current password. */
+export const adminUpdateCredentials = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d) =>
+    z.object({
+      currentPassword: z.string().min(1).max(200),
+      newUsername: z.string().trim().max(64).regex(/^[a-zA-Z0-9._-]*$/, "Username can use letters, numbers, . _ - only").optional(),
+      newPassword: z.string().max(200).optional(),
+    }).parse(d),
+  )
+  .handler(async ({ data, context }) => {
+    await assertAdmin(context);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: u } = await supabaseAdmin.auth.admin.getUserById(context.userId);
+    const email = u.user?.email;
+    if (!email) throw new Error("Account not found.");
+    const { createClient } = await import("@supabase/supabase-js");
+    const key = process.env["SUPABASE_PUBLISHABLE_KEY"]!;
+    const pub = createClient(process.env["SUPABASE_URL"]!, key, { auth: { persistSession: false, autoRefreshToken: false } });
+    const { error: authErr } = await pub.auth.signInWithPassword({ email, password: data.currentPassword });
+    if (authErr) throw new Error("Current password is incorrect.");
+    const newU = data.newUsername?.toLowerCase();
+    if (newU) {
+      const { data: taken } = await supabaseAdmin.from("admin_accounts").select("user_id").eq("username", newU).maybeSingle();
+      if (taken && taken.user_id !== context.userId) throw new Error("That username is already taken.");
+      const { error } = await supabaseAdmin.from("admin_accounts").update({ username: newU }).eq("user_id", context.userId);
+      if (error) throw new Error("Could not update username.");
+    }
+    if (data.newPassword) {
+      if (data.newPassword.length < 8) throw new Error("New password must be at least 8 characters.");
+      const { error } = await supabaseAdmin.auth.admin.updateUserById(context.userId, { password: data.newPassword });
+      if (error) throw new Error(error.message);
+    }
+    await supabaseAdmin.from("audit_log").insert({ admin_id: context.userId, action: "admin.credentials.update", details: { username: !!newU, password: !!data.newPassword } });
+    return { ok: true };
+  });
