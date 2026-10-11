@@ -2,10 +2,18 @@ import { Link, useNavigate } from "@tanstack/react-router";
 import type { MouseEvent } from "react";
 import { toast } from "sonner";
 import { useAuth } from "@/hooks/use-auth";
-import { Download, ExternalLink, Globe, Smartphone } from "lucide-react";
+import { BadgeCheck, Download, ExternalLink, Globe, Smartphone } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { compact, mediaUrl } from "@/lib/media";
 import type { AppRow } from "@/lib/queries";
+
+export function isVerifiedApp(app: Pick<AppRow, "kind" | "approval_status" | "scan_status">) {
+  return app.approval_status === "approved" && (app.kind === "website" || app.scan_status === "clean");
+}
+
+export function VerifiedBadge() {
+  return <span className="inline-flex items-center gap-1 rounded-md bg-success/10 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-success"><BadgeCheck className="size-3" />Verified</span>;
+}
 
 export function AppIcon({ app, size = "md" }: { app: Pick<AppRow, "name" | "icon_url" | "kind">; size?: "sm" | "md" | "lg" | "xl" }) {
   const s = { sm: "size-11 rounded-[12px] text-sm", md: "size-14 rounded-[14px]", lg: "size-12 rounded-[13px]", xl: "size-24 rounded-[24px] text-2xl" }[size];
@@ -67,7 +75,7 @@ export function FeaturedCard({ app }: { app: AppRow }) {
         <div className="flex items-center gap-3">
           <AppIcon app={app} size="sm" />
           <div className="min-w-0">
-            <h3 className="truncate font-sans font-semibold">{app.name}</h3>
+            <div className="flex min-w-0 items-center gap-1.5"><h3 className="truncate font-sans font-semibold">{app.name}</h3>{isVerifiedApp(app) && <VerifiedBadge />}</div>
             <p className="truncate text-xs text-muted-foreground">{app.developer ?? app.categories?.name}</p>
           </div>
         </div>
@@ -89,7 +97,7 @@ export function RowCard({ app }: { app: AppRow }) {
       <AppIcon app={app} />
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-2">
-          <h3 className="truncate font-sans font-semibold">{app.name}</h3>
+          <div className="flex min-w-0 items-center gap-1.5"><h3 className="truncate font-sans font-semibold">{app.name}</h3>{isVerifiedApp(app) && <VerifiedBadge />}</div>
           <TypeBadge kind={app.kind} />
         </div>
         <p className="truncate text-xs text-muted-foreground">{[app.developer, app.categories?.name].filter(Boolean).join(" · ")}</p>
@@ -111,7 +119,7 @@ export function CompactCard({ app }: { app: AppRow }) {
       <div className="flex items-center gap-3">
         <AppIcon app={app} size="lg" />
         <div className="min-w-0">
-          <h3 className="truncate font-sans font-semibold">{app.name}</h3>
+          <div className="flex min-w-0 items-center gap-1.5"><h3 className="truncate font-sans font-semibold">{app.name}</h3>{isVerifiedApp(app) && <VerifiedBadge />}</div>
           <p className="truncate text-xs text-muted-foreground">{app.categories?.name ?? app.developer}</p>
         </div>
       </div>

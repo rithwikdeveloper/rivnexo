@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import { Download, ExternalLink, Heart, ShieldCheck, Star } from "lucide-react";
 import { ShareDialog } from "@/components/share-dialog";
 import { SiteLayout, EmptyState } from "@/components/site-layout";
-import { AppIcon, TypeBadge } from "@/components/app-card";
+import { AppIcon, isVerifiedApp, TypeBadge, VerifiedBadge } from "@/components/app-card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { appBySlugQuery, reviewsQuery } from "@/lib/queries";
@@ -109,7 +109,7 @@ function AppDetail() {
         <div className="flex flex-col gap-6 sm:flex-row sm:items-start">
           <AppIcon app={app} size="xl" />
           <div className="flex-1">
-            <div className="flex flex-wrap items-center gap-2"><h1 className="text-3xl font-semibold">{app.name}</h1><TypeBadge kind={app.kind} /></div>
+            <div className="flex flex-wrap items-center gap-2"><h1 className="text-3xl font-semibold">{app.name}</h1><TypeBadge kind={app.kind} />{isVerifiedApp(app) && <VerifiedBadge />}</div>
             <p className="mt-1 text-sm text-muted-foreground">{[app.developer, app.categories?.name].filter(Boolean).join(" · ")}</p>
             <div className="mt-3 flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
               <span className="flex items-center gap-1"><Star className="size-4 fill-star text-star" />{avg ? avg.toFixed(1) : "No ratings"} ({reviews.length})</span>
