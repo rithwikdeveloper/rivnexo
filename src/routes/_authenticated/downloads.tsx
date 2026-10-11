@@ -28,7 +28,7 @@ function Downloads() {
           {data?.map((d) => d.apps && (
             <Link key={d.id} to="/apps/$slug" params={{ slug: d.apps.slug }} className="glass-panel flex items-center gap-4 rounded-2xl p-4">
               <AppIcon app={d.apps} size="sm" />
-              <div className="flex-1"><p className="font-medium">{d.apps.name}</p><p className="text-xs text-muted-foreground">v{d.version_name ?? "?"} · {new Date(d.created_at).toLocaleString()}</p></div>
+              <div className="flex-1"><p className="font-medium">{d.apps.name}</p><p className="text-xs text-muted-foreground">{new Date(d.created_at).toLocaleString()}</p></div>
             </Link>
           ))}
         </div>
