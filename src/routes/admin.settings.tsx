@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { logAudit } from "@/lib/audit";
+import { CredentialsForm } from "@/components/admin/credentials-form";
 
 export const Route = createFileRoute("/admin/settings")({ component: SettingsPage });
 
@@ -43,6 +44,7 @@ function SettingsPage() {
         <div className="flex items-center justify-between"><Label>Maintenance mode</Label><Switch checked={f.maintenance_mode} onCheckedChange={(v) => setF({ ...f, maintenance_mode: v })} /></div>
         <Button onClick={save} disabled={saving || !data}>Save</Button>
       </div>
+      <CredentialsForm />
     </div>
   );
 }
