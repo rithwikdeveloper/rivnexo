@@ -59,7 +59,7 @@ export function AppsTable({ kind, title }: { kind?: "website" | "apk"; title: st
           <thead className="text-left text-xs uppercase text-muted-foreground">
             <tr className="border-b border-border">
               <th className="p-3">App</th>
-              {kind === "apk" && <><th className="p-3">Version</th><th className="p-3">Scan</th><th className="p-3">Approval</th></>}
+              {kind === "apk" && <><th className="p-3">Scan</th><th className="p-3">Approval</th></>}
               <th className="p-3">Featured</th><th className="p-3">Published</th><th className="p-3">Usage</th><th className="p-3" />
             </tr>
           </thead>
@@ -76,7 +76,6 @@ export function AppsTable({ kind, title }: { kind?: "website" | "apk"; title: st
                 </td>
                 {kind === "apk" && (
                   <>
-                    <td className="p-3">{a.version_name ?? "—"}</td>
                     <td className="p-3">
                       <select value={a.scan_status} onChange={(e) => update.mutate({ id: a.id, patch: { scan_status: e.target.value } })} className="rounded-md bg-secondary px-2 py-1 ring-1 ring-border">
                         <option value="pending">Pending</option><option value="clean">Clean</option><option value="flagged">Flagged</option>

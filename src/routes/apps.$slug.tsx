@@ -99,7 +99,7 @@ function AppDetail() {
     recordOpen({ data: { appId: app.id } }).catch(() => {});
   };
   const info: [string, string | null | undefined][] = app.kind === "apk"
-    ? [["Version", app.version_name], ["Version code", app.version_code?.toString()], ["Package", app.package_name], ["Size", formatBytes(app.file_size)], ["Min Android", app.min_android], ["Released", app.release_date], ["SHA-256", app.sha256]]
+    ? [["Size", formatBytes(app.file_size)], ["Min Android", app.min_android], ["Released", app.release_date], ["SHA-256", app.sha256]]
     : [["Website", app.website_url], ["Category", app.categories?.name]];
 
   return (
@@ -131,12 +131,10 @@ function AppDetail() {
         </div>
 
         {app.kind === "apk" && (
-          <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
+          <div className="mt-8 grid grid-cols-2 gap-3">
             {([
-              ["Version", app.version_name ? `v${app.version_name}` : null],
               ["Size", app.file_size ? `${(app.file_size / 1048576).toFixed(1)} MB` : null],
               ["Requires", app.min_android ? `Android ${app.min_android}+` : null],
-              ["Package", app.package_name],
             ] as [string, string | null][]).map(([k, v]) => (
               <div key={k} className="glass-panel rounded-2xl p-4">
                 <p className="text-xs uppercase tracking-wide text-muted-foreground">{k}</p>
@@ -163,7 +161,7 @@ function AppDetail() {
               <section className="glass-panel rounded-2xl p-5">
                 <div className="flex flex-wrap items-baseline justify-between gap-2">
                   <h2 className="text-xl font-semibold">What's new</h2>
-                  <span className="text-xs text-muted-foreground">{[app.version_name && `v${app.version_name}`, app.release_date && new Date(app.release_date).toLocaleDateString()].filter(Boolean).join(" · ")}</span>
+                  <span className="text-xs text-muted-foreground">{app.release_date && new Date(app.release_date).toLocaleDateString()}</span>
                 </div>
                 <p className="mt-3 whitespace-pre-line text-muted-foreground">{app.changelog || "No release notes for this version."}</p>
               </section>

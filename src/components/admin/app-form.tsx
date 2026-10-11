@@ -44,8 +44,7 @@ export function AppForm({ initial, defaultKind }: { initial?: AppRow; defaultKin
   const [f, setF] = useState({
     name: initial?.name ?? "", short_description: initial?.short_description ?? "", full_description: initial?.full_description ?? "",
     developer: initial?.developer ?? "", website_url: initial?.website_url ?? "", category_id: initial?.category_id ?? "",
-    tags: (initial?.tags ?? []).join(", "), version_name: initial?.version_name ?? "", version_code: initial?.version_code?.toString() ?? "",
-    package_name: initial?.package_name ?? "", min_android: initial?.min_android ?? "", release_date: initial?.release_date ?? "",
+    tags: (initial?.tags ?? []).join(", "), min_android: initial?.min_android ?? "", release_date: initial?.release_date ?? "",
     changelog: initial?.changelog ?? "", scan_status: initial?.scan_status ?? "pending", approval_status: initial?.approval_status ?? "pending",
     is_featured: initial?.is_featured ?? false, is_published: initial?.is_published ?? false,
   });
@@ -101,8 +100,7 @@ export function AppForm({ initial, defaultKind }: { initial?: AppRow; defaultKin
       is_featured: f.is_featured, is_published: f.is_published, updated_at: new Date().toISOString(),
       website_url: kind === "website" ? f.website_url.trim() : null,
       ...(kind === "apk" ? {
-        apk_path: apk!.path, file_size: apk!.size, sha256: apk!.sha, version_name: f.version_name || null,
-        version_code: f.version_code ? Number(f.version_code) : null, package_name: f.package_name || null,
+        apk_path: apk!.path, file_size: apk!.size, sha256: apk!.sha,
         min_android: f.min_android || null, release_date: f.release_date || null, changelog: f.changelog || null,
         scan_status: f.scan_status, approval_status: f.approval_status,
       } : { approval_status: "approved" }),
@@ -151,9 +149,6 @@ export function AppForm({ initial, defaultKind }: { initial?: AppRow; defaultKin
             {busy === "apk" && <p className="text-xs text-muted-foreground">Uploading & computing checksum…</p>}
             {apk && <p className="break-all text-xs text-muted-foreground">{formatBytes(apk.size)} · SHA-256 {apk.sha}</p>}
           </div>
-          <div className={field}><Label>Version name</Label><Input value={f.version_name} onChange={set("version_name")} placeholder="1.0.0" /></div>
-          <div className={field}><Label>Version code</Label><Input type="number" value={f.version_code} onChange={set("version_code")} /></div>
-          <div className={field}><Label>Package name</Label><Input value={f.package_name} onChange={set("package_name")} placeholder="com.example.app" /></div>
           <div className={field}><Label>Minimum Android</Label><Input value={f.min_android} onChange={set("min_android")} placeholder="8.0" /></div>
           <div className={field}><Label>Release date</Label><Input type="date" value={f.release_date} onChange={set("release_date")} /></div>
           <div className={field}>
