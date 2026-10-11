@@ -16,7 +16,7 @@ function DownloadsPage() {
         <table className="w-full text-sm">
           <thead className="text-left text-muted-foreground"><tr><th className="p-3">App</th><th className="p-3">User</th><th className="p-3">When</th></tr></thead>
           <tbody>
-            {data.length === 0 && <tr><td colSpan={4} className="p-3 text-muted-foreground">No downloads yet.</td></tr>}
+            {data.length === 0 && <tr><td colSpan={3} className="p-3 text-muted-foreground">No downloads yet.</td></tr>}
             {data.map((d) => (
               <tr key={d.id} className="border-t border-border">
                 <td className="p-3">{d.apps?.name}</td>
