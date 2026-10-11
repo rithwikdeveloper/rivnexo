@@ -130,6 +130,22 @@ function AppDetail() {
           </div>
         </div>
 
+        {app.kind === "apk" && (
+          <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
+            {([
+              ["Version", app.version_name ? `v${app.version_name}` : null],
+              ["Size", app.file_size ? `${(app.file_size / 1048576).toFixed(1)} MB` : null],
+              ["Requires", app.min_android ? `Android ${app.min_android}+` : null],
+              ["Package", app.package_name],
+            ] as [string, string | null][]).map(([k, v]) => (
+              <div key={k} className="glass-panel rounded-2xl p-4">
+                <p className="text-xs uppercase tracking-wide text-muted-foreground">{k}</p>
+                <p className="mt-1 truncate font-semibold" title={v ?? ""}>{v ?? "—"}</p>
+              </div>
+            ))}
+          </div>
+        )}
+
         {app.screenshots.length > 0 && (
           <div className="mt-10 flex gap-4 overflow-x-auto pb-2">
             {app.screenshots.map((s) => <img key={s} src={mediaUrl(s)} alt="Screenshot" loading="lazy" className="h-80 rounded-xl object-cover ring-1 ring-border" />)}
@@ -143,8 +159,14 @@ function AppDetail() {
               <p className="mt-3 whitespace-pre-line text-pretty text-muted-foreground">{app.full_description || app.short_description}</p>
               {app.tags.length > 0 && <div className="mt-4 flex flex-wrap gap-2">{app.tags.map((t) => <span key={t} className="rounded-full bg-secondary px-3 py-1 text-xs ring-1 ring-border">{t}</span>)}</div>}
             </section>
-            {app.kind === "apk" && app.changelog && (
-              <section><h2 className="text-xl font-semibold">What's new</h2><p className="mt-3 whitespace-pre-line text-muted-foreground">{app.changelog}</p></section>
+            {app.kind === "apk" && (
+              <section className="glass-panel rounded-2xl p-5">
+                <div className="flex flex-wrap items-baseline justify-between gap-2">
+                  <h2 className="text-xl font-semibold">What's new</h2>
+                  <span className="text-xs text-muted-foreground">{[app.version_name && `v${app.version_name}`, app.release_date && new Date(app.release_date).toLocaleDateString()].filter(Boolean).join(" · ")}</span>
+                </div>
+                <p className="mt-3 whitespace-pre-line text-muted-foreground">{app.changelog || "No release notes for this version."}</p>
+              </section>
             )}
             <section>
               <h2 className="text-xl font-semibold">Ratings & reviews</h2>
