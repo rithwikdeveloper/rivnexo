@@ -58,8 +58,18 @@ function AuthPage() {
         if (error) throw error;
         if (!data.session) { toast.success("Check your email to confirm your account."); return; }
       } else {
-        const { error } = await supabase.auth.signInWithPassword({ email: p.data.email, password: p.data.password });
+        const { data: signedIn, error } = await supabase.auth.signInWithPassword({ email: p.data.email, password: p.data.password });
         if (error) throw error;
+        const { data: profile, error: profileError } = await supabase
+          .from("profiles")
+          .select("is_blocked")
+          .eq("id", signedIn.user.id)
+          .maybeSingle();
+        if (profileError) throw profileError;
+        if (profile?.is_blocked) {
+          await supabase.auth.signOut();
+          throw new Error("Your account has been blocked. Please contact support.");
+        }
       }
       navigate({ to: "/" });
     } catch (err) {
