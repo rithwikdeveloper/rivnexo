@@ -138,10 +138,29 @@ export const adminSetBlocked = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     await assertAdmin(context);
     if (data.userId === context.userId) throw new Error("You cannot block yourself.");
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    await supabaseAdmin.from("profiles").update({ is_blocked: data.blocked }).eq("id", data.userId);
-    await supabaseAdmin.auth.admin.updateUserById(data.userId, { ban_duration: data.blocked ? "876000h" : "none" });
-    await supabaseAdmin.from("audit_log").insert({ admin_id: context.userId, action: data.blocked ? "user.block" : "user.unblock", target: data.userId });
+    const { error: profileError } = await context.supabase
+      .from("profiles")
+      .update({ is_blocked: data.blocked })
+      .eq("id", data.userId);
+    if (profileError) throw new Error(profileError.message);
+
+    // Use the Auth Admin ban when the server secret is configured. The profile
+    // flag remains the app-level fallback so blocking still works in setups
+    // that intentionally do not provide a service-role key.
+    if (process.env["SUPABASE_SERVICE_ROLE_KEY"]) {
+      const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+      const { error: authError } = await supabaseAdmin.auth.admin.updateUserById(data.userId, {
+        ban_duration: data.blocked ? "876000h" : "none",
+      });
+      if (authError) throw new Error(authError.message);
+    }
+
+    const { error: auditError } = await context.supabase.from("audit_log").insert({
+      admin_id: context.userId,
+      action: data.blocked ? "user.block" : "user.unblock",
+      target: data.userId,
+    });
+    if (auditError) throw new Error(auditError.message);
     return { ok: true };
   });
 
