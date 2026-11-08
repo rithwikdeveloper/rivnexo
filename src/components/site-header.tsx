@@ -56,7 +56,7 @@ export function SiteHeader() {
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <Button asChild className="hidden sm:inline-flex"><Link to="/auth">Sign in</Link></Button>
+            <Button asChild className="shrink-0 px-3 sm:px-4"><Link to="/auth">Sign in</Link></Button>
           )}
           <Sheet>
             <SheetTrigger asChild><Button variant="ghost" size="icon" className="lg:hidden" aria-label="Menu"><Menu /></Button></SheetTrigger>
