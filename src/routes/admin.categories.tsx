@@ -16,16 +16,34 @@ function CategoriesPage() {
   const [name, setName] = useState("");
   const { data = [] } = useQuery({
     queryKey: ["categories"],
-    queryFn: async () => (await supabase.from("categories").select("*").order("sort_order")).data ?? [],
+    queryFn: async () => {
+      const { data: categories, error } = await supabase
+        .from("categories")
+        .select("*")
+        .order("sort_order");
+      if (error) throw error;
+      return categories ?? [];
+    },
   });
   const refresh = () => qc.invalidateQueries({ queryKey: ["categories"] });
   const add = useMutation({
     mutationFn: async () => {
-      const { error } = await supabase.from("categories").insert({ name: name.trim(), slug: slugify(name), sort_order: data.length });
+      const categoryName = name.trim();
+      const slug = slugify(categoryName);
+      if (!categoryName) throw new Error("Enter a category name.");
+      if (!slug) throw new Error("Use letters or numbers for the category name.");
+      const { error } = await supabase
+        .from("categories")
+        .insert({ name: categoryName, slug, sort_order: data.length });
       if (error) throw error;
-      await logAudit("category.create", name);
+      await logAudit("category.create", categoryName);
+      return categoryName;
     },
-    onSuccess: () => { setName(""); refresh(); },
+    onSuccess: (categoryName) => {
+      setName("");
+      refresh();
+      toast.success(`Category “${categoryName}” added.`);
+    },
     onError: (e: Error) => toast.error(e.message),
   });
   const del = useMutation({
@@ -40,15 +58,37 @@ function CategoriesPage() {
   return (
     <div>
       <h1 className="mb-6 text-2xl font-semibold">Categories</h1>
-      <form className="mb-6 flex gap-2" onSubmit={(e) => { e.preventDefault(); if (name.trim()) add.mutate(); }}>
-        <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="New category name" className="max-w-xs" />
-        <Button type="submit" disabled={add.isPending}>Add</Button>
+      <form
+        className="mb-6 flex gap-2"
+        onSubmit={(e) => {
+          e.preventDefault();
+          add.mutate();
+        }}
+      >
+        <Input
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder="New category name"
+          className="max-w-xs"
+          disabled={add.isPending}
+        />
+        <Button type="submit" disabled={add.isPending}>
+          Add
+        </Button>
       </form>
       <div className="glass-panel divide-y divide-border rounded-2xl">
         {data.map((c) => (
           <div key={c.id} className="flex items-center justify-between p-3 text-sm">
-            <span>{c.name} <span className="text-muted-foreground">/{c.slug}</span></span>
-            <Button size="icon" variant="ghost" onClick={() => confirm(`Delete ${c.name}?`) && del.mutate(c.id)}><Trash2 /></Button>
+            <span>
+              {c.name} <span className="text-muted-foreground">/{c.slug}</span>
+            </span>
+            <Button
+              size="icon"
+              variant="ghost"
+              onClick={() => confirm(`Delete ${c.name}?`) && del.mutate(c.id)}
+            >
+              <Trash2 />
+            </Button>
           </div>
         ))}
       </div>
