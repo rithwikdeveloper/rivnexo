@@ -93,9 +93,11 @@ export function SiteFooter() {
         <Logo />
         <div className="flex flex-col items-center gap-1 sm:items-end">
           <p>Independent marketplace · not affiliated with any app store.</p>
-          <div className="flex gap-3">
+          <div className="flex flex-wrap justify-center gap-3 sm:justify-end">
             <Link to="/about" className="text-primary hover:underline">About</Link>
             <Link to="/terms" className="text-primary hover:underline">Terms</Link>
+            <Link to="/privacy" className="text-primary hover:underline">Privacy</Link>
+            <Link to="/support" className="text-primary hover:underline">Support</Link>
           </div>
         </div>
       </div>

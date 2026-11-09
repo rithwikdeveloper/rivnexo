@@ -14,8 +14,10 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as SearchRouteImport } from './routes/search'
+import { Route as SupportRouteImport } from './routes/support'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as AuthenticatedDownloadsRouteImport } from './routes/_authenticated/downloads'
 import { Route as AuthenticatedFavoritesRouteImport } from './routes/_authenticated/favorites'
@@ -60,6 +62,11 @@ const AuthRoute = AuthRouteImport.update({
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
   id: '/reset-password',
   path: '/reset-password',
@@ -68,6 +75,11 @@ const ResetPasswordRoute = ResetPasswordRouteImport.update({
 const SearchRoute = SearchRouteImport.update({
   id: '/search',
   path: '/search',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SupportRoute = SupportRouteImport.update({
+  id: '/support',
+  path: '/support',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TermsRoute = TermsRouteImport.update({
@@ -171,8 +183,10 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/admin': typeof AdminRouteWithChildren
   '/auth': typeof AuthRoute
+  '/privacy': typeof PrivacyRoute
   '/reset-password': typeof ResetPasswordRoute
   '/search': typeof SearchRoute
+  '/support': typeof SupportRoute
   '/terms': typeof TermsRoute
   '/downloads': typeof AuthenticatedDownloadsRoute
   '/favorites': typeof AuthenticatedFavoritesRoute
@@ -197,8 +211,10 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/auth': typeof AuthRoute
+  '/privacy': typeof PrivacyRoute
   '/reset-password': typeof ResetPasswordRoute
   '/search': typeof SearchRoute
+  '/support': typeof SupportRoute
   '/terms': typeof TermsRoute
   '/downloads': typeof AuthenticatedDownloadsRoute
   '/favorites': typeof AuthenticatedFavoritesRoute
@@ -226,8 +242,10 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/admin': typeof AdminRouteWithChildren
   '/auth': typeof AuthRoute
+  '/privacy': typeof PrivacyRoute
   '/reset-password': typeof ResetPasswordRoute
   '/search': typeof SearchRoute
+  '/support': typeof SupportRoute
   '/terms': typeof TermsRoute
   '/_authenticated/downloads': typeof AuthenticatedDownloadsRoute
   '/_authenticated/favorites': typeof AuthenticatedFavoritesRoute
@@ -255,8 +273,10 @@ export interface FileRouteTypes {
     | '/about'
     | '/admin'
     | '/auth'
+    | '/privacy'
     | '/reset-password'
     | '/search'
+    | '/support'
     | '/terms'
     | '/downloads'
     | '/favorites'
@@ -281,8 +301,10 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/auth'
+    | '/privacy'
     | '/reset-password'
     | '/search'
+    | '/support'
     | '/terms'
     | '/downloads'
     | '/favorites'
@@ -309,8 +331,10 @@ export interface FileRouteTypes {
     | '/about'
     | '/admin'
     | '/auth'
+    | '/privacy'
     | '/reset-password'
     | '/search'
+    | '/support'
     | '/terms'
     | '/_authenticated/downloads'
     | '/_authenticated/favorites'
@@ -338,8 +362,10 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   AdminRoute: typeof AdminRouteWithChildren
   AuthRoute: typeof AuthRoute
+  PrivacyRoute: typeof PrivacyRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   SearchRoute: typeof SearchRoute
+  SupportRoute: typeof SupportRoute
   TermsRoute: typeof TermsRoute
   AdminLoginRoute: typeof AdminLoginRoute
   AppsSlugRoute: typeof AppsSlugRoute
@@ -383,6 +409,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/reset-password': {
       id: '/reset-password'
       path: '/reset-password'
@@ -395,6 +428,13 @@ declare module '@tanstack/react-router' {
       path: '/search'
       fullPath: '/search'
       preLoaderRoute: typeof SearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/support': {
+      id: '/support'
+      path: '/support'
+      fullPath: '/support'
+      preLoaderRoute: typeof SupportRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/terms': {
@@ -586,8 +626,10 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   AdminRoute: AdminRouteWithChildren,
   AuthRoute: AuthRoute,
+  PrivacyRoute: PrivacyRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   SearchRoute: SearchRoute,
+  SupportRoute: SupportRoute,
   TermsRoute: TermsRoute,
   AdminLoginRoute: AdminLoginRoute,
   AppsSlugRoute: AppsSlugRoute,
