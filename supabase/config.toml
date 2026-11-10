@@ -1,1 +1,9 @@
 project_id = "uqocbwlsdwlbbvowglbv"
+
+[auth.email.template.confirmation]
+subject = "Confirm your Rivnexo account"
+content_path = "./supabase/templates/confirmation.html"
+
+[auth.email.template.recovery]
+subject = "Reset your Rivnexo password"
+content_path = "./supabase/templates/recovery.html"
