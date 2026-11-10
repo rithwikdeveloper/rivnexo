@@ -3,7 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { Download, ExternalLink, Heart, ShieldCheck, Star } from "lucide-react";
+import { Download, ExternalLink, Heart, ShieldCheck, Star, Trash2 } from "lucide-react";
 import { ShareDialog } from "@/components/share-dialog";
 import { SiteLayout, EmptyState } from "@/components/site-layout";
 import { AppIcon, isVerifiedApp, TypeBadge, VerifiedBadge } from "@/components/app-card";
@@ -87,6 +87,17 @@ function AppDetail() {
       if (error) throw error;
     },
     onSuccess: () => { setBody(""); toast.success("Review saved"); qc.invalidateQueries({ queryKey: ["reviews"] }); },
+    onError: (e: Error) => toast.error(e.message),
+  });
+  const deleteReviewMut = useMutation({
+    mutationFn: async (reviewId: string) => {
+      const { error } = await supabase.from("reviews").delete().eq("id", reviewId);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      toast.success("Review deleted");
+      qc.invalidateQueries({ queryKey: ["reviews", app?.id] });
+    },
     onError: (e: Error) => toast.error(e.message),
   });
 
@@ -203,7 +214,25 @@ function AppDetail() {
               <div className="mt-4 space-y-3">
                 {reviews.map((r) => (
                   <div key={r.id} className="glass-panel rounded-2xl p-4">
-                    <div className="flex items-center justify-between"><span className="text-sm font-medium">{r.author_name ?? "User"}</span><Stars value={r.rating} /></div>
+                    <div className="flex items-center justify-between gap-3">
+                      <span className="text-sm font-medium">{r.author_name ?? "User"}</span>
+                      <div className="flex items-center gap-3">
+                        <Stars value={r.rating} />
+                        {user?.id === r.user_id && (
+                          <button
+                            type="button"
+                            className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-destructive disabled:opacity-50"
+                            disabled={deleteReviewMut.isPending}
+                            onClick={() => {
+                              if (confirm("Delete your review?")) deleteReviewMut.mutate(r.id);
+                            }}
+                          >
+                            <Trash2 className="size-3.5" />
+                            Delete
+                          </button>
+                        )}
+                      </div>
+                    </div>
                     {r.body && <p className="mt-2 text-sm text-muted-foreground">{r.body}</p>}
                   </div>
                 ))}
