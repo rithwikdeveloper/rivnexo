@@ -97,6 +97,7 @@ export function SiteFooter() {
             <Link to="/about" className="text-primary hover:underline">About</Link>
             <Link to="/terms" className="text-primary hover:underline">Terms</Link>
             <Link to="/privacy" className="text-primary hover:underline">Privacy</Link>
+            <Link to="/report" className="text-primary hover:underline">Report content</Link>
             <Link to="/support" className="text-primary hover:underline">Support</Link>
           </div>
         </div>

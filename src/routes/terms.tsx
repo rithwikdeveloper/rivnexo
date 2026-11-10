@@ -85,7 +85,20 @@ function TermsPage() {
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold">7. Availability and disclaimers</h2>
+            <h2 className="text-xl font-semibold">7. User-submitted listings and reports</h2>
+            <p className="mt-3 text-pretty text-muted-foreground">
+              Anyone submitting a listing must own or have permission to publish the app, APK,
+              website information, screenshots, logos, and other materials included in that listing.
+              By submitting content, you grant Rivnexo a limited permission to host, display, and
+              distribute it as part of the marketplace. Do not submit pirated, malicious, deceptive,
+              or infringing content. We may review, restrict, or remove listings and accounts after
+              receiving a valid copyright, malware, abuse, or policy report. Reports can be sent
+              through the Report Content page or the support contact provided on the website.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-xl font-semibold">8. Availability and disclaimers</h2>
             <p className="mt-3 text-pretty text-muted-foreground">
               The service is provided on an “as available” basis. We may change, suspend, or
               discontinue features or listings. To the extent permitted by law, Rivnexo is not
@@ -95,7 +108,7 @@ function TermsPage() {
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold">8. Changes and contact</h2>
+            <h2 className="text-xl font-semibold">9. Changes and contact</h2>
             <p className="mt-3 text-pretty text-muted-foreground">
               We may update these terms from time to time. Continued use after an update means you
               accept the revised terms.{" "}

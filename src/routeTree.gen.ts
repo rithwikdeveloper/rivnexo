@@ -15,6 +15,7 @@ import { Route as AboutRouteImport } from './routes/about'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as ReportRouteImport } from './routes/report'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as SearchRouteImport } from './routes/search'
 import { Route as SupportRouteImport } from './routes/support'
@@ -65,6 +66,11 @@ const AuthRoute = AuthRouteImport.update({
 const PrivacyRoute = PrivacyRouteImport.update({
   id: '/privacy',
   path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReportRoute = ReportRouteImport.update({
+  id: '/report',
+  path: '/report',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
@@ -184,6 +190,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AdminRouteWithChildren
   '/auth': typeof AuthRoute
   '/privacy': typeof PrivacyRoute
+  '/report': typeof ReportRoute
   '/reset-password': typeof ResetPasswordRoute
   '/search': typeof SearchRoute
   '/support': typeof SupportRoute
@@ -212,6 +219,7 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/auth': typeof AuthRoute
   '/privacy': typeof PrivacyRoute
+  '/report': typeof ReportRoute
   '/reset-password': typeof ResetPasswordRoute
   '/search': typeof SearchRoute
   '/support': typeof SupportRoute
@@ -243,6 +251,7 @@ export interface FileRoutesById {
   '/admin': typeof AdminRouteWithChildren
   '/auth': typeof AuthRoute
   '/privacy': typeof PrivacyRoute
+  '/report': typeof ReportRoute
   '/reset-password': typeof ResetPasswordRoute
   '/search': typeof SearchRoute
   '/support': typeof SupportRoute
@@ -274,6 +283,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/auth'
     | '/privacy'
+    | '/report'
     | '/reset-password'
     | '/search'
     | '/support'
@@ -302,6 +312,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/auth'
     | '/privacy'
+    | '/report'
     | '/reset-password'
     | '/search'
     | '/support'
@@ -332,6 +343,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/auth'
     | '/privacy'
+    | '/report'
     | '/reset-password'
     | '/search'
     | '/support'
@@ -363,6 +375,7 @@ export interface RootRouteChildren {
   AdminRoute: typeof AdminRouteWithChildren
   AuthRoute: typeof AuthRoute
   PrivacyRoute: typeof PrivacyRoute
+  ReportRoute: typeof ReportRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   SearchRoute: typeof SearchRoute
   SupportRoute: typeof SupportRoute
@@ -414,6 +427,13 @@ declare module '@tanstack/react-router' {
       path: '/privacy'
       fullPath: '/privacy'
       preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/report': {
+      id: '/report'
+      path: '/report'
+      fullPath: '/report'
+      preLoaderRoute: typeof ReportRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/reset-password': {
@@ -627,6 +647,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminRoute: AdminRouteWithChildren,
   AuthRoute: AuthRoute,
   PrivacyRoute: PrivacyRoute,
+  ReportRoute: ReportRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   SearchRoute: SearchRoute,
   SupportRoute: SupportRoute,

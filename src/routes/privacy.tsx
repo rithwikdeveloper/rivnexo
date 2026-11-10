@@ -86,7 +86,25 @@ function PrivacyPage() {
             </p>
           </section>
           <section>
-            <h2 className="text-xl font-semibold">7. Changes to this policy</h2>
+            <h2 className="text-xl font-semibold">7. Retention and deletion</h2>
+            <p className="mt-3 text-pretty text-muted-foreground">
+              We keep account and marketplace information only for as long as needed to provide the
+              service, maintain security, resolve disputes, comply with legal obligations, and keep
+              necessary audit records. You may contact us to request account deletion or removal of
+              personal information, subject to information we must retain for security or legal
+              reasons.
+            </p>
+          </section>
+          <section>
+            <h2 className="text-xl font-semibold">8. Security and privacy questions</h2>
+            <p className="mt-3 text-pretty text-muted-foreground">
+              We use reasonable safeguards designed to protect information, but no online service
+              can guarantee complete security. Contact the support address below to ask about your
+              information, report a privacy concern, or request account assistance.
+            </p>
+          </section>
+          <section>
+            <h2 className="text-xl font-semibold">9. Changes to this policy</h2>
             <p className="mt-3 text-pretty text-muted-foreground">
               We may update this policy when the service changes. The latest version will always be
               available on this page.

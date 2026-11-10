@@ -55,6 +55,7 @@ export function AppForm({ initial, defaultKind }: { initial?: AppRow; defaultKin
     initial?.apk_path ? { path: initial.apk_path, size: initial.file_size ?? 0, sha: initial.sha256 ?? "" } : null,
   );
   const [busy, setBusy] = useState<string | null>(null);
+  const [rightsConfirmed, setRightsConfirmed] = useState(false);
   const set = (k: keyof typeof f) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => setF({ ...f, [k]: e.target.value });
 
   const onImage = (setter: (p: string) => void, folder: string) => async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -93,6 +94,7 @@ export function AppForm({ initial, defaultKind }: { initial?: AppRow; defaultKin
       if (!u.success) return toast.error("Enter a valid website URL (https://…)");
     }
     if (kind === "apk" && !apk) return toast.error("Upload an APK file");
+    if (!rightsConfirmed) return toast.error("Confirm that you have rights to publish this app and its media");
     setBusy("save");
     const row = {
       kind, ...p.data, icon_url: icon || null, banner_url: banner || null, screenshots: shots,
@@ -185,6 +187,10 @@ export function AppForm({ initial, defaultKind }: { initial?: AppRow; defaultKin
         </div>
         <label className="flex items-center gap-3 text-sm"><Switch checked={f.is_featured} onCheckedChange={(v) => setF({ ...f, is_featured: v })} />Featured</label>
         <label className="flex items-center gap-3 text-sm"><Switch checked={f.is_published} onCheckedChange={(v) => setF({ ...f, is_published: v })} />Published</label>
+        <label className="flex items-start gap-3 text-sm sm:col-span-2">
+          <input type="checkbox" checked={rightsConfirmed} onChange={(e) => setRightsConfirmed(e.target.checked)} className="mt-0.5 size-4 accent-primary" />
+          <span>I confirm that Rivnexo has permission to host and publish this app, APK, website information, screenshots, logos, and descriptions. I understand that infringing or malicious content may be removed.</span>
+        </label>
       </div>
       <Button type="submit" size="lg" disabled={!!busy}>{busy === "save" ? "Saving…" : initial ? "Save changes" : "Create app"}</Button>
     </form>
