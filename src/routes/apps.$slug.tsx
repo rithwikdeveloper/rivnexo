@@ -8,6 +8,7 @@ import { ShareDialog } from "@/components/share-dialog";
 import { SiteLayout, EmptyState } from "@/components/site-layout";
 import { AppIcon, isVerifiedApp, TypeBadge, VerifiedBadge } from "@/components/app-card";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { appBySlugQuery, reviewsQuery } from "@/lib/queries";
 import { compact, formatBytes, mediaUrl } from "@/lib/media";
@@ -62,6 +63,7 @@ function AppDetail() {
   const recordOpen = useServerFn(recordWebsiteOpen);
   const [rating, setRating] = useState(5);
   const [body, setBody] = useState("");
+  const [selectedScreenshot, setSelectedScreenshot] = useState<string | null>(null);
 
   const favMut = useMutation({
     mutationFn: async () => {
@@ -146,9 +148,32 @@ function AppDetail() {
 
         {app.screenshots.length > 0 && (
           <div className="mt-10 flex gap-4 overflow-x-auto pb-2">
-            {app.screenshots.map((s) => <img key={s} src={mediaUrl(s)} alt="Screenshot" loading="lazy" className="h-80 rounded-xl object-cover ring-1 ring-border" />)}
+            {app.screenshots.map((s, index) => (
+              <button
+                key={s}
+                type="button"
+                onClick={() => setSelectedScreenshot(s)}
+                className="shrink-0 cursor-zoom-in rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+                aria-label={`Open screenshot ${index + 1} full screen`}
+              >
+                <img src={mediaUrl(s)} alt={`Screenshot ${index + 1}`} loading="lazy" className="h-80 rounded-xl object-cover ring-1 ring-border transition-opacity hover:opacity-85" />
+              </button>
+            ))}
           </div>
         )}
+
+        <Dialog open={!!selectedScreenshot} onOpenChange={(open) => !open && setSelectedScreenshot(null)}>
+          <DialogContent className="flex h-screen w-screen max-w-none items-center justify-center border-0 bg-black/95 p-4 sm:rounded-none">
+            <DialogTitle className="sr-only">Full-screen screenshot preview</DialogTitle>
+            {selectedScreenshot && (
+              <img
+                src={mediaUrl(selectedScreenshot)}
+                alt="Full-screen screenshot preview"
+                className="max-h-full max-w-full object-contain"
+              />
+            )}
+          </DialogContent>
+        </Dialog>
 
         <div className="mt-10 grid gap-8 lg:grid-cols-3">
           <div className="lg:col-span-2 space-y-8">
